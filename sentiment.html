@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overview of Sentiment Analysis Models</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        p {
+            margin: 10px 0;
+        }
+        ul {
+            margin: 10px 0 20px 20px;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: #e7f3ff;
+            padding: 10px;
+            border-left: 5px solid #0056b3;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Overview of Sentiment Analysis Models</h1>
+        <p>This page provides an overview of the key findings from the systematic literature review conducted by Qianwen Ariel Xu, Victor Chang, and Chrisina Jayne, as published in the <em>Decision Analytics Journal</em> (2022). The review explores emerging trends and challenges in social media-based sentiment analysis, highlighting the most effective models for this task.</p>
+
+        <h2>Key Findings</h2>
+        <p>The systematic review identifies several key trends and models in sentiment analysis. The most notable findings are:</p>
+        <ul>
+            <li><strong>BERT-based Models:</strong> BERT and its variants are highly effective for sentiment analysis, particularly when used in hybrid approaches. These models excel in capturing context and semantic nuances, making them ideal for analyzing complex sentiment data.</li>
+            <li><strong>BiLSTM with Attention:</strong> BiLSTM (Bidirectional Long Short-Term Memory) models combined with attention mechanisms have consistently shown high accuracy and F-scores. These models are particularly effective in handling sequential data and understanding the dependencies within the text.</li>
+            <li><strong>CNN-LSTM Hybrids:</strong> Hybrid models combining Convolutional Neural Networks (CNN) and LSTM are among the top performers in sentiment analysis. They leverage CNN's ability to capture local patterns and LSTM's strength in understanding sequential dependencies.</li>
+            <li><strong>Lexicon-based Approaches:</strong> While lexicon-based methods are less effective than machine learning models, they are still useful for certain tasks, especially when computational resources are limited or when dealing with languages with fewer annotated datasets.</li>
+            <li><strong>Ensemble Methods:</strong> Combining multiple models in an ensemble often results in better performance. Techniques such as stacking classifiers have proven effective in improving the robustness and accuracy of sentiment analysis models.</li>
+        </ul>
+
+        <div class="highlight">
+            <h2>Recommended Models for Sentiment Analysis</h2>
+            <p>Based on the findings from the review, the following models are recommended for conducting sentiment analysis on social media data:</p>
+            <ul>
+                <li><strong>BERT-based Hybrid Models:</strong> For the most accurate and contextually aware sentiment analysis, BERT-based models, especially in hybrid configurations, are recommended.</li>
+                <li><strong>BiLSTM with Attention Mechanism:</strong> This model is ideal for tasks requiring a deep understanding of the text sequence and is highly effective in multiple domains.</li>
+                <li><strong>CNN-LSTM Hybrids:</strong> These hybrids are recommended for their ability to capture both local features and long-term dependencies in text data.</li>
+                <li><strong>Ensemble Methods:</strong> When maximum accuracy is required, combining models through ensemble techniques can provide superior performance.</li>
+                <li><strong>Lexicon-based Approaches:</strong> For simpler or resource-constrained tasks, lexicon-based methods can still offer valuable insights, particularly in preliminary analyses.</li>
+            </ul>
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>The review by Xu, Chang, and Jayne offers a comprehensive overview of current sentiment analysis methods, highlighting the strengths of various models. By leveraging the recommended models, researchers and practitioners can achieve more accurate and insightful sentiment analysis on social media platforms.</p>
+
+        <p>For more details, please refer to the full article in the <em>Decision Analytics Journal</em> (2022), "A systematic review of social media-based sentiment analysis: Emerging trends and challenges."</p>
+    </div>
+</body>
+</html>
