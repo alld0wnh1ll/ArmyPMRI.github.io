@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-In - PMRI Army Officer Resource Hub</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Check-In</h1>
+    </div>
+
+    <div class="content">
+        <div class="introduction">
+            <h2>Daily Check-In</h2>
+            <p>
+                Use this form to check in for the day. Your location and timestamp will be automatically recorded.
+            </p>
+        </div>
+
+        <div class="checkin-section">
+            <div class="checkin-form-container">
+                <form id="checkinForm" class="checkin-form">
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timestamp">Time:</label>
+                        <input type="text" id="timestamp" name="timestamp" readonly>
+                    </div>
+
+                    <button type="submit" class="checkin-button">Check In</button>
+                </form>
+            </div>
+
+            <div id="checkinHistory" class="checkin-history">
+                <h3>Recent Check-Ins</h3>
+                <div id="historyList"></div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="orientation.html">Orientation Overview</a></li>
+                <li><a href="resources.html">Military & Academic Resources</a></li>
+                <li><a href="faq.html">Frequently Asked Questions</a></li>
+                <li><a href="contacts.html">Contacts & Points of Contact</a></li>
+                <li><a href="campus-life.html">Campus Life & Community</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Get current timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const timestamp = now.toLocaleString();
+            document.getElementById('timestamp').value = timestamp;
+        }
+
+        // Get location
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        document.getElementById('location').value = `${latitude}, ${longitude}`;
+                    },
+                    error => {
+                        document.getElementById('location').value = 'Location unavailable';
+                        console.error('Error getting location:', error);
+                    }
+                );
+            } else {
+                document.getElementById('location').value = 'Geolocation not supported';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('checkinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const checkinData = {
+                name: document.getElementById('name').value,
+                location: document.getElementById('location').value,
+                timestamp: document.getElementById('timestamp').value
+            };
+
+            // Add to history
+            addToHistory(checkinData);
+
+            // Clear form
+            this.reset();
+            updateTimestamp();
+            getLocation();
+
+            // Show success message
+            alert('Check-in successful!');
+        });
+
+        // Add check-in to history
+        function addToHistory(checkinData) {
+            const historyList = document.getElementById('historyList');
+            const checkinElement = document.createElement('div');
+            checkinElement.className = 'history-item';
+            checkinElement.innerHTML = `
+                <p><strong>${checkinData.name}</strong></p>
+                <p>Location: ${checkinData.location}</p>
+                <p>Time: ${checkinData.timestamp}</p>
+            `;
+            historyList.insertBefore(checkinElement, historyList.firstChild);
+
+            // Keep only last 10 check-ins
+            if (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+
+        // Initialize
+        updateTimestamp();
+        getLocation();
+        setInterval(updateTimestamp, 1000); // Update timestamp every second
+    </script>
+</body>
+</html> 
