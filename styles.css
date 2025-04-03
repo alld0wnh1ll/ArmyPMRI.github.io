@@ -1277,3 +1277,26 @@ a:hover {
 .dark-section .contact-item p {
     color: #ffffff;
 }
+
+.download-button {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.guide-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #4a5568;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.guide-link:hover {
+    background-color: #2d3748;
+}
+
+.guide-link i {
+    margin-right: 8px;
+}
