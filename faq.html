@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ - PMRI Army Officer Resource Hub</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="header">
@@ -12,116 +13,107 @@
     </div>
 
     <div class="content">
-        <h1>Frequently Asked Questions</h1>
-        
-        <section class="faq-section">
+        <nav class="main-nav">
+            <div class="nav-item">
+                <a href="index.html">Home</a>
+            </div>
+            <div class="nav-item">
+                <a href="resources.html">Resources</a>
+            </div>
+            <div class="nav-item">
+                <a href="absence.html">Leave & Passes</a>
+            </div>
+            <div class="nav-item">
+                <a href="contacts.html">Contacts</a>
+            </div>
+        </nav>
+
+        <section class="resource-section">
             <h2>Quick Navigation</h2>
-            <div class="guide-sections">
-                <h3>General Questions</h3>
+            <div class="resource-content">
                 <ul>
-                    <li><a href="#arrival">When should I arrive at Purdue?</a></li>
-                    <li><a href="#tuition">How do I apply for in-state tuition?</a></li>
-                </ul>
-
-                <h3>Service-Specific Questions</h3>
-                <ul>
-                    <li><a href="#af-processing">Air Force In-Processing</a></li>
-                    <li><a href="#navy-processing">Navy In-Processing</a></li>
-                    <li><a href="#army-processing">Army In-Processing</a></li>
-                </ul>
-
-                <h3>Medical and Dental Questions</h3>
-                <ul>
-                    <li><a href="#id-cards">Where can I get my ID card updated?</a></li>
+                    <li><a href="#in-processing">In-Processing</a></li>
+                    <li><a href="#academic">Academic Questions</a></li>
+                    <li><a href="#military">Military Requirements</a></li>
+                    <li><a href="#housing">Housing & Local Area</a></li>
                 </ul>
             </div>
         </section>
 
-        <section class="faq-section">
-            <h2>General Questions</h2>
-            
-            <div class="faq-item" id="arrival">
+        <section class="resource-section dark-section" id="in-processing">
+            <h2>In-Processing Questions</h2>
+            <div class="resource-content">
                 <h3>When should I arrive at Purdue?</h3>
-                <p>It is recommended to arrive two weeks before classes begin (typically the 3rd week of August). This allows time to:</p>
-                <ul>
-                    <li>Get settled into housing</li>
-                    <li>Complete in-processing</li>
-                    <li>Set up local services</li>
-                    <li>Familiarize yourself with the area</li>
-                </ul>
-            </div>
+                <p>Plan to arrive two weeks before classes start to complete in-processing and get settled.</p>
 
-            <div class="faq-item" id="tuition">
-                <h3>How do I apply for in-state tuition?</h3>
-                <p>For PMRI Fellowship recipients:</p>
-                <ul>
-                    <li>Apply for in-state residency once you have orders</li>
-                    <li>This is for tuition purposes only (does not affect legal state of residency)</li>
-                    <li>Follow directions in your offer letter</li>
-                </ul>
-                <p>For non-Fellowship students:</p>
-                <ul>
-                    <li>Check Purdue Registrar website for "Residence Classification Information for Military Personnel"</li>
-                </ul>
+                <h3>What documents do I need for in-processing?</h3>
+                <p>Bring your orders, military ID, medical records, and any PCS documentation.</p>
+
+                <h3>How do I start the in-processing?</h3>
+                <p>Contact USASD at Fort Jackson through Army Virtual Desktop or NIPR computer access.</p>
             </div>
         </section>
 
-        <section class="faq-section">
-            <h2>Service-Specific Questions</h2>
-            
-            <div class="faq-item" id="af-processing">
-                <h3>Air Force In-Processing</h3>
-                <p>Required steps:</p>
-                <ul>
-                    <li>Complete AFIT CIP Portal registration</li>
-                    <li>Set up LeaveWeb account</li>
-                    <li>Configure AF Webmail</li>
-                    <li>Contact MPF for force management</li>
-                </ul>
-            </div>
+        <section class="resource-section" id="academic">
+            <h2>Academic Questions</h2>
+            <div class="resource-content">
+                <div class="faq-item">
+                    <h3>How do I register for classes?</h3>
+                    <p>Work with your academic advisor to select courses and register through MyPurdue.</p>
+                </div>
 
-            <div class="faq-item" id="navy-processing">
-                <h3>Navy In-Processing</h3>
-                <p>Required steps:</p>
-                <ul>
-                    <li>Contact Purdue Navy ROTC admin team</li>
-                    <li>Register for health assessment at Great Lakes</li>
-                    <li>Complete PHA requirements</li>
-                </ul>
-            </div>
+                <div class="faq-item">
+                    <h3>What is the course load requirement?</h3>
+                    <p>Maintain full-time status with minimum 8 credit hours per semester.</p>
+                </div>
 
-            <div class="faq-item" id="army-processing">
-                <h3>Army In-Processing</h3>
-                <p>Required steps:</p>
-                <ul>
-                    <li>In-process with USASD at Fort Jackson</li>
-                    <li>Complete required forms from USASD website (requires Army Virtual Desktop or NIPR computer access)</li>
-                    <li>Obtain TRADOC patch</li>
-                </ul>
+                <div class="faq-item">
+                    <h3>How do I get in-state tuition?</h3>
+                    <p>Submit your orders to the Bursar's office for military classification.</p>
+                </div>
             </div>
         </section>
 
-        <section class="faq-section">
-            <h2>Medical and Dental Questions</h2>
-            
-            <div class="faq-item" id="id-cards">
-                <h3>Where can I get my ID card updated?</h3>
-                <p>You can get your ID card updated at:</p>
-                <ul>
-                    <li>Lafayette Armory: (317) 247-3300</li>
-                    <li>Grissom Air Reserve Base: (765) 688-3909</li>
-                </ul>
+        <section class="resource-section dark-section" id="military">
+            <h2>Military Requirements</h2>
+            <div class="resource-content">
+                <h3>How do I request leave?</h3>
+                <p>Submit requests through IPPS-A and notify PMRI cadre.</p>
+
+                <h3>What about PT requirements?</h3>
+                <p>Maintain Army physical fitness standards and complete ACFT as required.</p>
+
+                <h3>Do I need to complete military training?</h3>
+                <p>Yes, maintain all required training through Army Learning Management System.</p>
+            </div>
+        </section>
+
+        <section class="resource-section" id="housing">
+            <h2>Housing & Local Area</h2>
+            <div class="resource-content">
+                <div class="faq-item">
+                    <h3>What are the housing options?</h3>
+                    <p>Off-campus housing in West Lafayette or Lafayette areas. Contact PMRI cadre for recommendations.</p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>What is the BAH rate?</h3>
+                    <p>Check current rates for West Lafayette zip code 47906. Check the following link for current rates: <a href="https://www.travel.dod.mil/Allowances/Basic-Allowance-for-Housing/BAH-Rate-Lookup/">BAH Rate Lookup</a></p>
+                </div>
+
+                <div class="faq-item">
+                    <h3>Where are the nearest military facilities?</h3>
+                    <p>Lafayette Armory and Grissom Air Reserve Base are the closest facilities.</p>
+                </div>
             </div>
         </section>
     </div>
 
-    <div class="sidebar">
-        <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="resources.html">Military & Academic Resources</a></li>
-            <li><a href="faq.html">Frequently Asked Questions</a></li>
-            <li><a href="contacts.html">Contacts & Points of Contact</a></li>
-        </ul>
+    <div class="checkin-link-container">
+        <a href="checkin.html" class="checkin-link">
+            <i class="fas fa-check-circle"></i>
+            Daily Check-In
+        </a>
     </div>
 </body>
 </html> 
