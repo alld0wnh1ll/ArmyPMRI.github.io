@@ -340,3 +340,30 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
+.loading-message {
+    text-align: center;
+    color: #f0c808;
+    padding: 2rem;
+    font-size: 1.1rem;
+    display: none;
+}
+
+.loading-message:after {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid #f0c808;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
