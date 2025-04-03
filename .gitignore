@@ -3,6 +3,9 @@
 .env.local
 .env.*.local
 
+# Configuration files
+js/config.processed.js
+
 # Node modules
 node_modules/
 
