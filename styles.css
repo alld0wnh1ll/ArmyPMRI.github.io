@@ -860,3 +860,83 @@ a:hover {
     color: #3498db;
     text-decoration: underline;
 }
+
+/* FAQ Page Styles */
+.faq-section {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.faq-section h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.faq-section h3 {
+    color: #34495e;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+.faq-item {
+    background-color: white;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.faq-item h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.faq-item p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.faq-item ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.faq-item li {
+    margin-bottom: 10px;
+    padding: 8px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.faq-item li:hover {
+    background-color: #e9ecef;
+}
+
+.faq-item a {
+    color: #2980b9;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.faq-item a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+/* Remove the old grid layout styles */
+.faq-grid {
+    display: block;
+}
+
+.faq-category {
+    margin-bottom: 30px;
+}
