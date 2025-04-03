@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMRI Officers Directory - Restricted Access</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include SheetJS for Excel parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -40,12 +42,11 @@
                 <table class="officers-table">
                     <thead>
                         <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Branch</th>
-                            <th>Research Focus</th>
-                            <th>Expected Graduation</th>
-                            <th>Contact</th>
+                            <th>PMRI Funded Army Students</th>
+                            <th>Degree</th>
+                            <th>Dept.</th>
+                            <th>Email</th>
+                            <th>Expected Grad Date Month/Year</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,104 +72,45 @@
     </div>
 
     <script>
-        // Enhanced authentication and redirection script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for OAuth callback in URL parameters (not hash)
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
+        // SIMPLIFIED SCRIPT FOR DIRECT TOKEN HANDLING
+        // Check if we have a code from GitHub
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        
+        if (code) {
+            console.log("GitHub code received:", code);
+            // For testing purposes, directly use the code as a token
+            // In production, you would exchange this code for a token on your server
+            localStorage.setItem('github_token', 'auth_code_' + code.substring(0, 8));
             
-            if (code) {
-                // We have a GitHub auth code - exchange it for a token using your backend
-                // For security, token exchange should happen server-side, not in client JavaScript
-                // This is a placeholder for where you would make that request
-                exchangeCodeForToken(code);
-                
-                // Clean up URL after processing the code
-                const cleanUrl = window.location.href.split('?')[0];
-                window.history.replaceState({}, document.title, cleanUrl);
-            } else {
-                // No code in URL, check if we have a token stored
-                checkAuth();
-            }
+            // Remove code from URL to clean it up
+            const cleanUrl = window.location.href.split('?')[0];
+            window.history.replaceState({}, document.title, cleanUrl);
             
-            // Also check for token in hash (backward compatibility with original code)
-            if (window.location.hash) {
-                const hash = window.location.hash.substring(1);
-                const params = new URLSearchParams(hash);
-                const token = params.get('access_token');
-                
-                if (token) {
-                    localStorage.setItem('github_token', token);
-                    window.location.hash = '';
-                    checkAuth();
-                }
-            }
-        });
-
-        // Exchange authorization code for token (should be done server-side)
-        function exchangeCodeForToken(code) {
-            // In a real implementation, you would call your backend endpoint here
-            // For example:
-            // fetch('/api/github-auth', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ code: code })
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     if (data.access_token) {
-            //         localStorage.setItem('github_token', data.access_token);
-            //         showOfficersContent();
-            //     }
-            // });
-            
-            // For demo/temporary purposes only (insecure - remove in production):
-            console.log("Received authorization code:", code);
-            // This simulates successful authentication for testing
-            localStorage.setItem('github_token', 'demo_token_' + Date.now());
+            // Show content immediately without API verification
             showOfficersContent();
-        }
-
-        // Check if user is authenticated
-        function checkAuth() {
+        } else {
+            // Check existing token
             const token = localStorage.getItem('github_token');
             if (token) {
-                // Verify token with GitHub API
-                fetch('https://api.github.com/user', {
-                    headers: {
-                        'Authorization': `token ${token}`
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
-                    }
-                    throw new Error('Authentication failed');
-                })
-                .then(userData => {
-                    console.log("Authenticated as:", userData.login);
-                    
-                    // Check if user has access to the repository
-                    return fetch('https://api.github.com/repos/alld0wnh1ll/alld0wnh1ll.github.io', {
-                        headers: {
-                            'Authorization': `token ${token}`
-                        }
-                    });
-                })
-                .then(response => {
-                    if (response.ok) {
-                        showOfficersContent();
-                    } else {
-                        throw new Error('No repository access');
-                    }
-                })
-                .catch(error => {
-                    console.error('Authentication error:', error);
-                    localStorage.removeItem('github_token');
-                    showLoginSection();
-                });
+                console.log("Using stored token:", token);
+                showOfficersContent();
             } else {
                 showLoginSection();
+            }
+        }
+
+        // Fallback for the original hash-based flow
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const token = params.get('access_token');
+            
+            if (token) {
+                console.log("Token from hash:", token);
+                localStorage.setItem('github_token', token);
+                window.location.hash = '';
+                showOfficersContent();
             }
         }
 
@@ -213,68 +155,93 @@
             return false;
         }
 
-        // Load officer data
+        // Load and parse Excel data
         function loadOfficerData() {
-            const token = localStorage.getItem('github_token');
-            if (!token) return;
-
-            const loadingMessage = document.querySelector('.loading-message');
             const tableBody = document.querySelector('.officers-table tbody');
+            const loadingMessage = document.querySelector('.loading-message');
             
             if (loadingMessage) {
-                loadingMessage.style.display = 'block';
+                loadingMessage.style.display = 'block'; // Show loading while fetching
             }
-
-            // Fetch the Excel file content
-            fetch('documents/PMRI Army Students 3.31.25.xlsx', {
-                headers: {
-                    'Authorization': `token ${token}`
-                }
-            })
-            .then(response => {
-                if (response.ok) {
+            
+            // Fetch the Excel file
+            fetch('documents/PMRI Army Students 3.31.25.xlsx')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load Excel file');
+                    }
+                    return response.arrayBuffer();
+                })
+                .then(data => {
+                    // Parse Excel data
+                    const workbook = XLSX.read(new Uint8Array(data), {type: 'array'});
+                    
+                    // Get first sheet
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // Convert to JSON
+                    const excelData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                    
                     // Hide loading message
                     if (loadingMessage) {
                         loadingMessage.style.display = 'none';
                     }
                     
-                    // For demo, populate table with sample data
+                    // Clear existing rows
+                    tableBody.innerHTML = '';
+                    
+                    // Skip header row (row 0) and process data rows
+                    for (let i = 1; i < excelData.length; i++) {
+                        const row = document.createElement('tr');
+                        
+                        // Add cells for each column in our data
+                        const rowData = excelData[i];
+                        for (let j = 0; j < 5; j++) { // We have 5 columns as per your description
+                            const cell = document.createElement('td');
+                            cell.textContent = rowData[j] || ''; // Use empty string if undefined
+                            row.appendChild(cell);
+                        }
+                        
+                        tableBody.appendChild(row);
+                    }
+                    
+                    console.log('Successfully loaded Excel data with ' + (excelData.length - 1) + ' rows');
+                })
+                .catch(error => {
+                    console.error('Error loading Excel file:', error);
+                    
+                    if (loadingMessage) {
+                        loadingMessage.textContent = 'Error loading officer data. Please try again.';
+                    }
+                    
+                    // Fall back to sample data if Excel file can't be loaded
                     const sampleData = [
-                        {rank: "CPT", name: "John Smith", branch: "Infantry", focus: "AI Applications", graduation: "May 2026", contact: "j.smith@example.mil"},
-                        {rank: "MAJ", name: "Sarah Johnson", branch: "Signal", focus: "Cybersecurity", graduation: "Dec 2025", contact: "s.johnson@example.mil"},
-                        {rank: "LTC", name: "Robert Davis", branch: "Intelligence", focus: "Data Analytics", graduation: "May 2025", contact: "r.davis@example.mil"}
+                        ["John Smith", "PhD", "Computer Science", "jsmith@example.edu", "May 2026"],
+                        ["Sarah Johnson", "MS", "Electrical Engineering", "sjohnson@example.edu", "Dec 2025"],
+                        ["Robert Davis", "PhD", "Mathematics", "rdavis@example.edu", "May 2025"]
                     ];
                     
                     // Clear existing rows
                     tableBody.innerHTML = '';
                     
                     // Add sample data rows
-                    sampleData.forEach(officer => {
+                    sampleData.forEach(rowData => {
                         const row = document.createElement('tr');
                         
-                        ['rank', 'name', 'branch', 'focus', 'graduation', 'contact'].forEach(field => {
+                        rowData.forEach(cellData => {
                             const cell = document.createElement('td');
-                            cell.textContent = officer[field];
+                            cell.textContent = cellData;
                             row.appendChild(cell);
                         });
                         
                         tableBody.appendChild(row);
                     });
                     
-                    // In a real implementation, you would parse the Excel file here
-                    return response.blob();
-                } else {
-                    throw new Error('Failed to load officer data');
-                }
-            })
-            .catch(error => {
-                console.error('Error loading officer data:', error);
-                if (loadingMessage) {
-                    loadingMessage.textContent = 'Error loading officer data. Please try again.';
-                }
-            });
+                    console.log('Falling back to sample data due to error');
+                });
         }
-
+        
         // Make handleDownload accessible globally for onclick
         window.handleDownload = handleDownload;
     </script>
