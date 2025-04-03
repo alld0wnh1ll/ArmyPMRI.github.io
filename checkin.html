@@ -88,166 +88,241 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // Check if we have a code from GitHub
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
+        // Initialize global variables for check-ins
+        let checkIns = [];
         
-        if (code) {
-            console.log("GitHub code received:", code);
-            // For testing purposes, directly use the code as a token
-            localStorage.setItem('github_token', 'auth_code_' + code.substring(0, 8));
+        // DOM loaded event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Page loaded, initializing functionality...");
             
-            // Remove code from URL to clean it up
-            const cleanUrl = window.location.href.split('?')[0];
-            window.history.replaceState({}, document.title, cleanUrl);
+            // Load any existing check-ins from localStorage
+            try {
+                const storedCheckIns = localStorage.getItem('checkIns');
+                if (storedCheckIns) {
+                    checkIns = JSON.parse(storedCheckIns);
+                    console.log(`Loaded ${checkIns.length} check-ins from storage`);
+                }
+            } catch (e) {
+                console.error("Error loading stored check-ins:", e);
+                checkIns = [];
+            }
             
-            // Show history content directly without API verification
-            showHistoryContent();
-        } else {
-            // Check existing token
+            // Initialize timestamp immediately
+            updateTimestamp();
+            
+            // Set up timestamp update interval (every second)
+            setInterval(updateTimestamp, 1000);
+            
+            // Initialize geolocation
+            getLocation();
+            
+            // Check GitHub authentication
+            checkGitHubAuth();
+            
+            // Set up event listeners
+            setupEventListeners();
+        });
+        
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Refresh location button
+            const refreshLocationBtn = document.getElementById('refreshLocation');
+            if (refreshLocationBtn) {
+                refreshLocationBtn.addEventListener('click', function() {
+                    console.log("Refreshing location...");
+                    getLocation();
+                });
+            }
+            
+            // Check-in form submission
+            const checkinForm = document.getElementById('checkinForm');
+            if (checkinForm) {
+                checkinForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const nameInput = document.getElementById('name');
+                    const locationInput = document.getElementById('location');
+                    const timestampInput = document.getElementById('timestamp');
+                    
+                    if (!nameInput.value.trim()) {
+                        showToast('Please enter your name', 'error');
+                        return;
+                    }
+                    
+                    const checkinData = {
+                        name: nameInput.value,
+                        location: locationInput.value,
+                        timestamp: timestampInput.value,
+                        id: Date.now()
+                    };
+                    
+                    console.log("Submitting check-in:", checkinData);
+                    
+                    // Add to history and storage
+                    addCheckIn(checkinData);
+                    
+                    // Clear name field but keep location and timestamp
+                    nameInput.value = '';
+                    
+                    // Show success message
+                    showToast('Check-in successful!');
+                });
+            }
+            
+            // Mobile menu toggle
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+                
+                // Close sidebar when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (sidebar.classList.contains('active') && 
+                        !sidebar.contains(e.target) && 
+                        !menuToggle.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                });
+            }
+        }
+        
+        // Get current timestamp
+        function updateTimestamp() {
+            const timestampInput = document.getElementById('timestamp');
+            if (timestampInput) {
+                const now = new Date();
+                timestampInput.value = now.toLocaleString();
+            }
+        }
+        
+        // Get location using Geolocation API
+        function getLocation() {
+            const locationInput = document.getElementById('location');
+            
+            if (!locationInput) {
+                console.error("Location input element not found");
+                return;
+            }
+            
+            locationInput.value = 'Detecting location...';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Success callback
+                        const latitude = position.coords.latitude;
+                        const longitude = position.coords.longitude;
+                        locationInput.value = `${latitude}, ${longitude}`;
+                        console.log(`Location detected: ${latitude}, ${longitude}`);
+                    },
+                    function(error) {
+                        // Error callback
+                        console.error('Geolocation error:', error);
+                        switch(error.code) {
+                            case error.PERMISSION_DENIED:
+                                locationInput.value = 'Location access denied';
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                locationInput.value = 'Location unavailable';
+                                break;
+                            case error.TIMEOUT:
+                                locationInput.value = 'Location request timed out';
+                                break;
+                            default:
+                                locationInput.value = 'Location error';
+                        }
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                locationInput.value = 'Geolocation not supported';
+                console.error('Geolocation not supported by this browser');
+            }
+        }
+        
+        // Check GitHub auth from URL or localStorage
+        function checkGitHubAuth() {
+            // Check for code parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                console.log("GitHub code received:", code);
+                // For testing purposes, directly use the code as a token
+                localStorage.setItem('github_token', 'auth_code_' + code.substring(0, 8));
+                
+                // Remove code from URL to clean it up
+                const cleanUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, cleanUrl);
+                
+                // Show history content
+                showHistoryContent();
+                return;
+            }
+            
+            // Check localStorage for token
             const token = localStorage.getItem('github_token');
             if (token) {
-                console.log("Using stored token:", token);
+                console.log("Using stored token");
                 showHistoryContent();
             } else {
                 showLoginSection();
             }
         }
-
-        // Check-in data storage - using localStorage for demonstration
-        // In a real app, this would be stored on a server
-        let checkIns = JSON.parse(localStorage.getItem('checkIns') || '[]');
-
+        
         // Show login section
         function showLoginSection() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('historyContent').style.display = 'none';
+            const loginSection = document.getElementById('loginSection');
+            const historyContent = document.getElementById('historyContent');
+            
+            if (loginSection) loginSection.style.display = 'block';
+            if (historyContent) historyContent.style.display = 'none';
         }
-
+        
         // Show history content
         function showHistoryContent() {
-            document.getElementById('loginSection').style.display = 'none';
-            document.getElementById('historyContent').style.display = 'block';
+            const loginSection = document.getElementById('loginSection');
+            const historyContent = document.getElementById('historyContent');
+            
+            if (loginSection) loginSection.style.display = 'none';
+            if (historyContent) historyContent.style.display = 'block';
             
             // Load check-in history
             loadCheckInHistory();
         }
-
-        // Get current timestamp
-        function updateTimestamp() {
-            const now = new Date();
-            const timestamp = now.toLocaleString();
-            document.getElementById('timestamp').value = timestamp;
-        }
-
-        // Get location
-        function getLocation() {
-            if (navigator.geolocation) {
-                document.getElementById('location').value = 'Detecting location...';
-                navigator.geolocation.getCurrentPosition(
-                    position => {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
-                        document.getElementById('location').value = `${latitude}, ${longitude}`;
-                    },
-                    error => {
-                        document.getElementById('location').value = 'Location unavailable';
-                        console.error('Error getting location:', error);
-                    },
-                    { enableHighAccuracy: true, timeout: 10000 }
-                );
-            } else {
-                document.getElementById('location').value = 'Geolocation not supported';
-            }
-        }
-
-        // Mobile menu toggle
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
         
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Close sidebar when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                sidebar.classList.remove('active');
+        // Add a new check-in
+        function addCheckIn(checkinData) {
+            // Add to beginning of array
+            checkIns.unshift(checkinData);
+            
+            // Save to localStorage
+            try {
+                localStorage.setItem('checkIns', JSON.stringify(checkIns));
+                console.log("Saved check-in to storage");
+            } catch (e) {
+                console.error("Error saving check-in:", e);
             }
-        });
-
-        // Show toast message
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.style.display = 'block';
             
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
+            // Refresh the history display if it's visible
+            if (document.getElementById('historyContent').style.display !== 'none') {
+                loadCheckInHistory();
+            }
         }
-
-        // Refresh location button
-        document.getElementById('refreshLocation').addEventListener('click', () => {
-            getLocation();
-        });
-
-        // Handle form submission
-        document.getElementById('checkinForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const checkinData = {
-                name: document.getElementById('name').value,
-                location: document.getElementById('location').value,
-                timestamp: document.getElementById('timestamp').value,
-                id: Date.now() // Unique ID for each check-in
-            };
-
-            // Add to history
-            addToHistory(checkinData);
-
-            // Store the check-in
-            checkIns.unshift(checkinData); // Add to beginning of array
-            localStorage.setItem('checkIns', JSON.stringify(checkIns));
-
-            // Clear name field but keep location and timestamp
-            document.getElementById('name').value = '';
-            
-            // Update timestamp
-            updateTimestamp();
-
-            // Show success message
-            showToast('Check-in successful!');
-        });
-
-        // Add check-in to history with mobile-friendly formatting
-        function addToHistory(checkinData) {
-            const historyList = document.getElementById('historyList');
-            const checkinElement = document.createElement('div');
-            checkinElement.className = 'history-item';
-            checkinElement.dataset.id = checkinData.id;
-            
-            // Format location for better readability
-            const locationParts = checkinData.location.split(', ');
-            const formattedLocation = locationParts.length === 2 
-                ? `Lat: ${parseFloat(locationParts[0]).toFixed(4)}, Long: ${parseFloat(locationParts[1]).toFixed(4)}`
-                : checkinData.location;
-
-            checkinElement.innerHTML = `
-                <div class="history-item-header">
-                    <p><strong>${checkinData.name}</strong></p>
-                    <span class="history-time">${checkinData.timestamp}</span>
-                </div>
-                <p class="history-location"><i class="fas fa-map-marker-alt"></i> ${formattedLocation}</p>
-            `;
-            
-            historyList.insertBefore(checkinElement, historyList.firstChild);
-        }
-
+        
         // Load check-in history from storage
         function loadCheckInHistory() {
             const historyList = document.getElementById('historyList');
+            if (!historyList) return;
+            
+            // Clear current list
             historyList.innerHTML = '';
             
             if (checkIns.length === 0) {
@@ -255,17 +330,43 @@
                 return;
             }
             
-            // Display all check-ins, most recent first
-            checkIns.forEach(checkin => {
-                addToHistory(checkin);
+            // Display all check-ins, most recent first (they're already sorted)
+            checkIns.forEach(function(checkin) {
+                const checkinElement = document.createElement('div');
+                checkinElement.className = 'history-item';
+                
+                // Format location for better readability
+                let formattedLocation = checkin.location;
+                const locationParts = checkin.location.split(', ');
+                if (locationParts.length === 2 && !isNaN(parseFloat(locationParts[0]))) {
+                    formattedLocation = `Lat: ${parseFloat(locationParts[0]).toFixed(4)}, Long: ${parseFloat(locationParts[1]).toFixed(4)}`;
+                }
+                
+                checkinElement.innerHTML = `
+                    <div class="history-item-header">
+                        <p><strong>${checkin.name}</strong></p>
+                        <span class="history-time">${checkin.timestamp}</span>
+                    </div>
+                    <p class="history-location"><i class="fas fa-map-marker-alt"></i> ${formattedLocation}</p>
+                `;
+                
+                historyList.appendChild(checkinElement);
             });
         }
-
-        // Initialize
-        updateTimestamp();
-        getLocation();
-        // Update timestamp every second
-        setInterval(updateTimestamp, 1000);
+        
+        // Show toast message
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.style.display = 'block';
+            
+            setTimeout(function() {
+                toast.style.display = 'none';
+            }, 3000);
+        }
     </script>
 </body>
 </html>
