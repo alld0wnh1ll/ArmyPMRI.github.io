@@ -704,3 +704,50 @@ body {
         padding: 1rem; /* Larger touch target */
     }
 }
+
+/* Check-in Link Styles */
+.checkin-link-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+}
+
+.checkin-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #4b5320;
+    color: #f0c808;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.checkin-link i {
+    font-size: 1.4rem;
+}
+
+.checkin-link:hover {
+    background-color: #f0c808;
+    color: #4b5320;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .checkin-link {
+        padding: 12px 24px;
+        font-size: 1.1rem;
+    }
+
+    .checkin-link i {
+        font-size: 1.2rem;
+    }
+}
