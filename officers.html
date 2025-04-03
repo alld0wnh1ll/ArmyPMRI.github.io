@@ -94,7 +94,11 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        showOfficersContent();
+                        // Show the officers content and hide the introduction
+                        document.getElementById('officersContent').style.display = 'block';
+                        document.querySelector('.login-section').style.display = 'none';
+                        document.querySelector('.introduction').style.display = 'none';
+                        loadOfficerData();
                     } else {
                         throw new Error('No repository access');
                     }
@@ -107,15 +111,10 @@
             }
         }
 
-        function showOfficersContent() {
-            document.getElementById('officersContent').style.display = 'block';
-            document.querySelector('.login-section').style.display = 'none';
-            loadOfficerData();
-        }
-
         function showLoginSection() {
             document.getElementById('officersContent').style.display = 'none';
             document.querySelector('.login-section').style.display = 'flex';
+            document.querySelector('.introduction').style.display = 'block';
         }
 
         // Handle file download
