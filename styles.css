@@ -102,3 +102,75 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Absence Page Styles */
+.main-content {
+    padding: 2rem;
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.main-content section {
+    margin-bottom: 2rem;
+}
+
+.main-content h3 {
+    color: #f0c808;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #4b5320;
+    padding-bottom: 0.5rem;
+}
+
+.info-card {
+    background-color: #3b3b3b;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.info-card h4 {
+    color: #eaeaea;
+    margin-bottom: 1rem;
+}
+
+.info-card ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.info-card ul li {
+    color: #eaeaea;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.info-card ul li:before {
+    content: "•";
+    color: #f0c808;
+    position: absolute;
+    left: 0;
+}
+
+.info-card a {
+    color: #f0c808;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.info-card a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .info-card {
+        padding: 1rem;
+    }
+}
