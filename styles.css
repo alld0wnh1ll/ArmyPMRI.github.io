@@ -754,28 +754,28 @@ body {
 
 /* Resource Page Styles */
 .resource-section {
-    background-color: #f5f5f5;
+    background-color: #2e2e2e;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 30px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .resource-section h2 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
+    color: #f0c808;
+    border-bottom: 2px solid #4b5320;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
 
 .resource-section h3 {
-    color: #34495e;
+    color: #ffffff;
     margin-top: 20px;
     margin-bottom: 15px;
 }
 
 .resource-content {
-    background-color: white;
+    background-color: #3b3b3b;
     padding: 15px;
     border-radius: 6px;
     margin-top: 15px;
@@ -788,37 +788,38 @@ body {
 
 .resource-content li {
     margin-bottom: 10px;
-    padding: 8px;
-    background-color: #f8f9fa;
+    padding: 12px;
+    background-color: #2e2e2e;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    color: #ffffff;
 }
 
 .resource-content li:hover {
-    background-color: #e9ecef;
+    background-color: #4b5320;
 }
 
 .resource-content a {
-    color: #2980b9;
+    color: #f0c808;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .resource-content a:hover {
-    color: #3498db;
-    text-decoration: underline;
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .guide-sections {
-    background-color: white;
+    background-color: #3b3b3b;
     padding: 20px;
     border-radius: 6px;
     margin-top: 15px;
 }
 
 .guide-sections h3 {
-    color: #2c3e50;
+    color: #f0c808;
     margin-top: 20px;
     margin-bottom: 15px;
 }
@@ -826,6 +827,9 @@ body {
 .guide-sections ul {
     list-style-type: none;
     padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 10px;
 }
 
 .guide-sections li {
@@ -833,20 +837,68 @@ body {
 }
 
 .guide-sections a {
-    color: #2980b9;
+    color: #ffffff;
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     display: block;
-    padding: 8px;
-    background-color: #f8f9fa;
+    padding: 12px;
+    background-color: #4b5320;
     border-radius: 4px;
 }
 
 .guide-sections a:hover {
-    color: #3498db;
-    background-color: #e9ecef;
+    background-color: #f0c808;
+    color: #4b5320;
+    transform: translateY(-2px);
+}
+
+/* Mobile Responsive Updates */
+@media (max-width: 768px) {
+    .guide-sections ul {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-item {
+        flex: 1 1 100%;
+    }
+}
+
+/* Main Navigation Styles */
+.main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+    background-color: #2e2e2e;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    background-color: #4b5320;
+    border-radius: 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    background-color: #f0c808;
+    transform: translateY(-2px);
+}
+
+.nav-item a {
+    color: #ffffff;
     text-decoration: none;
+    font-weight: 500;
+    display: block;
+}
+
+.nav-item:hover a {
+    color: #4b5320;
 }
 
 /* Update existing link styles */

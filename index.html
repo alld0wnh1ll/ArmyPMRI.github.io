@@ -3,58 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PMRI – Army Officer Resource Hub</title>
+    <title>PMRI Army Officer Resource Hub</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="header">
-        <h1>Purdue Military Research Institute (PMRI)</h1>
+        <h1>PMRI Army Officer Resource Hub</h1>
     </div>
 
     <div class="content">
-        <div class="introduction">
-            <h2>Welcome, Army Officers</h2>
-            <p>
-                This site is designed to support new U.S. Army officers participating in the Purdue Military Research Institute. This site is meant to be a living archive of useful information for incoming PMRI Army Officers.
-            </p>
-            <p>
-                Whether you're just starting your academic journey or looking for specific campus resources, this page serves as your central hub for navigating PMRI and life at Purdue.
-            </p>
-        </div>
-
-        <div class="image-gallery">
-            <h2>PMRI in Action</h2>
-            <div class="gallery-container">
-                <div class="gallery-item">
-                    <img src="pictures/WP_visit1.jpg" alt="Army officer conducting research at Purdue">
-                    <p>Research collaboration at Purdue</p>
-                </div>
-                <div class="gallery-item">
-                    <img src="pictures/at_purdue.jpg" alt="Military students on Purdue campus">
-                    <p>Military students on campus</p>
-                </div>
-                <div class="gallery-item">
-                    <img src="pictures/lab_work.png" alt="Laboratory work and research">
-                    <p>Advanced research facilities</p>
-                </div>
+        <nav class="main-nav">
+            <div class="nav-item">
+                <a href="resources.html">Resources</a>
             </div>
-        </div>
+            <div class="nav-item">
+                <a href="officers.html">Officers</a>
+            </div>
+            <div class="nav-item">
+                <a href="faq.html">FAQ</a>
+            </div>
+            <div class="nav-item">
+                <a href="contacts.html">Contacts</a>
+            </div>
+        </nav>
+
+        <section class="resource-section">
+            <h2>Welcome to PMRI</h2>
+            <div class="resource-content">
+                <p>The Purdue Military Research Institute (PMRI) connects military graduate students with cutting-edge research opportunities across disciplines at Purdue University. This resource hub provides essential information and tools for Army officers in the program.</p>
+            </div>
+        </section>
+
+        <section class="resource-section">
+            <h2>Quick Links</h2>
+            <div class="guide-sections">
+                <h3>Essential Resources</h3>
+                <ul>
+                    <li><a href="resources.html#service-specific">Service-Specific Resources</a></li>
+                    <li><a href="resources.html#academic">Academic Information</a></li>
+                    <li><a href="absence.html">Leave and Absence</a></li>
+                    <li><a href="checkin.html">Daily Check-In</a></li>
+                </ul>
+
+                <h3>Program Information</h3>
+                <ul>
+                    <li><a href="faq.html">Frequently Asked Questions</a></li>
+                    <li><a href="contacts.html">Important Contacts</a></li>
+                    <li><a href="resources.html#housing">Housing Information</a></li>
+                    <li><a href="resources.html#medical">Medical Resources</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="resource-section">
+            <h2>Recent Updates</h2>
+            <div class="resource-content">
+                <ul>
+                    <li>Updated PMRI Student Guide with latest information</li>
+                    <li>Added new service-specific resources</li>
+                    <li>Improved check-in system</li>
+                    <li>Updated contact information</li>
+                </ul>
+            </div>
+        </section>
 
         <div class="sidebar">
             <ul>
                 <li><a href="index.html">Home</a></li>
+                <li><a href="absence.html">Absences (Leave and Passes)</a></li>
                 <li><a href="resources.html">Military & Academic Resources</a></li>
                 <li><a href="faq.html">Frequently Asked Questions</a></li>
                 <li><a href="contacts.html">Contacts & Points of Contact</a></li>
             </ul>
         </div>
+    </div>
 
-        <div class="checkin-link-container">
-            <a href="checkin.html" class="checkin-link">
-                <i class="fas fa-check-circle"></i>
-                Check in
-            </a>
-        </div>
+    <div class="checkin-link-container">
+        <a href="checkin.html" class="checkin-link">
+            <i class="fas fa-check-circle"></i>
+            Daily Check-In
+        </a>
     </div>
 </body>
 </html>
