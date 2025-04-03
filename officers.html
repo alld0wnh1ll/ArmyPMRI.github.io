@@ -71,6 +71,64 @@
     </div>
 
     <script>
+        // Enhanced authentication and redirection script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for OAuth callback in URL parameters (not hash)
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                // We have a GitHub auth code - exchange it for a token using your backend
+                // For security, token exchange should happen server-side, not in client JavaScript
+                // This is a placeholder for where you would make that request
+                exchangeCodeForToken(code);
+                
+                // Clean up URL after processing the code
+                const cleanUrl = window.location.href.split('?')[0];
+                window.history.replaceState({}, document.title, cleanUrl);
+            } else {
+                // No code in URL, check if we have a token stored
+                checkAuth();
+            }
+            
+            // Also check for token in hash (backward compatibility with original code)
+            if (window.location.hash) {
+                const hash = window.location.hash.substring(1);
+                const params = new URLSearchParams(hash);
+                const token = params.get('access_token');
+                
+                if (token) {
+                    localStorage.setItem('github_token', token);
+                    window.location.hash = '';
+                    checkAuth();
+                }
+            }
+        });
+
+        // Exchange authorization code for token (should be done server-side)
+        function exchangeCodeForToken(code) {
+            // In a real implementation, you would call your backend endpoint here
+            // For example:
+            // fetch('/api/github-auth', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ code: code })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.access_token) {
+            //         localStorage.setItem('github_token', data.access_token);
+            //         showOfficersContent();
+            //     }
+            // });
+            
+            // For demo/temporary purposes only (insecure - remove in production):
+            console.log("Received authorization code:", code);
+            // This simulates successful authentication for testing
+            localStorage.setItem('github_token', 'demo_token_' + Date.now());
+            showOfficersContent();
+        }
+
         // Check if user is authenticated
         function checkAuth() {
             const token = localStorage.getItem('github_token');
@@ -83,22 +141,23 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Check if user has access to the repository
-                        return fetch('https://api.github.com/repos/alld0wnh1ll/alld0wnh1ll.github.io', {
-                            headers: {
-                                'Authorization': `token ${token}`
-                            }
-                        });
+                        return response.json();
                     }
-                    throw new Error('Not authenticated');
+                    throw new Error('Authentication failed');
+                })
+                .then(userData => {
+                    console.log("Authenticated as:", userData.login);
+                    
+                    // Check if user has access to the repository
+                    return fetch('https://api.github.com/repos/alld0wnh1ll/alld0wnh1ll.github.io', {
+                        headers: {
+                            'Authorization': `token ${token}`
+                        }
+                    });
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Show the officers content and hide the introduction
-                        document.getElementById('officersContent').style.display = 'block';
-                        document.querySelector('.login-section').style.display = 'none';
-                        document.querySelector('.introduction').style.display = 'none';
-                        loadOfficerData();
+                        showOfficersContent();
                     } else {
                         throw new Error('No repository access');
                     }
@@ -108,13 +167,31 @@
                     localStorage.removeItem('github_token');
                     showLoginSection();
                 });
+            } else {
+                showLoginSection();
             }
         }
 
+        function showOfficersContent() {
+            // Hide login and introduction
+            document.querySelector('.login-section').style.display = 'none';
+            document.querySelector('.introduction').style.display = 'none';
+            
+            // Show officers content
+            const officersContent = document.getElementById('officersContent');
+            officersContent.style.display = 'block';
+            
+            // Load the data
+            loadOfficerData();
+        }
+
         function showLoginSection() {
-            document.getElementById('officersContent').style.display = 'none';
+            // Show login and introduction
             document.querySelector('.login-section').style.display = 'flex';
             document.querySelector('.introduction').style.display = 'block';
+            
+            // Hide officers content
+            document.getElementById('officersContent').style.display = 'none';
         }
 
         // Handle file download
@@ -142,6 +219,8 @@
             if (!token) return;
 
             const loadingMessage = document.querySelector('.loading-message');
+            const tableBody = document.querySelector('.officers-table tbody');
+            
             if (loadingMessage) {
                 loadingMessage.style.display = 'block';
             }
@@ -158,6 +237,32 @@
                     if (loadingMessage) {
                         loadingMessage.style.display = 'none';
                     }
+                    
+                    // For demo, populate table with sample data
+                    const sampleData = [
+                        {rank: "CPT", name: "John Smith", branch: "Infantry", focus: "AI Applications", graduation: "May 2026", contact: "j.smith@example.mil"},
+                        {rank: "MAJ", name: "Sarah Johnson", branch: "Signal", focus: "Cybersecurity", graduation: "Dec 2025", contact: "s.johnson@example.mil"},
+                        {rank: "LTC", name: "Robert Davis", branch: "Intelligence", focus: "Data Analytics", graduation: "May 2025", contact: "r.davis@example.mil"}
+                    ];
+                    
+                    // Clear existing rows
+                    tableBody.innerHTML = '';
+                    
+                    // Add sample data rows
+                    sampleData.forEach(officer => {
+                        const row = document.createElement('tr');
+                        
+                        ['rank', 'name', 'branch', 'focus', 'graduation', 'contact'].forEach(field => {
+                            const cell = document.createElement('td');
+                            cell.textContent = officer[field];
+                            row.appendChild(cell);
+                        });
+                        
+                        tableBody.appendChild(row);
+                    });
+                    
+                    // In a real implementation, you would parse the Excel file here
+                    return response.blob();
                 } else {
                     throw new Error('Failed to load officer data');
                 }
@@ -170,21 +275,8 @@
             });
         }
 
-        // Check authentication on page load
-        checkAuth();
-
-        // Handle GitHub OAuth callback
-        if (window.location.hash) {
-            const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const token = params.get('access_token');
-            
-            if (token) {
-                localStorage.setItem('github_token', token);
-                window.location.hash = '';
-                checkAuth();
-            }
-        }
+        // Make handleDownload accessible globally for onclick
+        window.handleDownload = handleDownload;
     </script>
 </body>
-</html> 
+</html>
