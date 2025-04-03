@@ -545,3 +545,162 @@ body {
         padding: 1rem;
     }
 }
+
+/* Mobile Menu Styles */
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #f0c808;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+/* Mobile-friendly Check-in Form */
+.location-input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.refresh-location {
+    background: #4b5320;
+    color: #f0c808;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.refresh-location:hover {
+    background: #f0c808;
+    color: #4b5320;
+}
+
+/* Toast Notification */
+.toast {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4b5320;
+    color: #f0c808;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+/* Mobile-friendly History Items */
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.history-time {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.history-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.history-location i {
+    color: #4b5320;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100vh;
+        background: #2e2e2e;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        overflow-y: auto;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .checkin-section {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .checkin-form-container,
+    .checkin-history {
+        padding: 1rem;
+    }
+
+    .checkin-form input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    .checkin-button {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .history-item {
+        padding: 0.75rem;
+    }
+
+    .history-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .history-time {
+        font-size: 0.8rem;
+    }
+
+    .toast {
+        width: 90%;
+        text-align: center;
+    }
+}
+
+/* Touch-friendly Styles */
+@media (hover: none) {
+    .checkin-button:active,
+    .refresh-location:active {
+        transform: scale(0.98);
+    }
+
+    .history-item {
+        padding: 1rem; /* Larger touch target */
+    }
+}
