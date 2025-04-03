@@ -94,9 +94,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        document.getElementById('officersContent').style.display = 'block';
-                        document.querySelector('.login-section').style.display = 'none';
-                        loadOfficerData();
+                        showOfficersContent();
                     } else {
                         throw new Error('No repository access');
                     }
@@ -104,8 +102,20 @@
                 .catch(error => {
                     console.error('Authentication error:', error);
                     localStorage.removeItem('github_token');
+                    showLoginSection();
                 });
             }
+        }
+
+        function showOfficersContent() {
+            document.getElementById('officersContent').style.display = 'block';
+            document.querySelector('.login-section').style.display = 'none';
+            loadOfficerData();
+        }
+
+        function showLoginSection() {
+            document.getElementById('officersContent').style.display = 'none';
+            document.querySelector('.login-section').style.display = 'flex';
         }
 
         // Handle file download
@@ -132,12 +142,33 @@
             const token = localStorage.getItem('github_token');
             if (!token) return;
 
-            // Here you would typically fetch the data from your Excel file
-            // For now, we'll just show a loading message
             const loadingMessage = document.querySelector('.loading-message');
             if (loadingMessage) {
                 loadingMessage.style.display = 'block';
             }
+
+            // Fetch the Excel file content
+            fetch('documents/PMRI Army Students 3.31.25.xlsx', {
+                headers: {
+                    'Authorization': `token ${token}`
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Hide loading message
+                    if (loadingMessage) {
+                        loadingMessage.style.display = 'none';
+                    }
+                } else {
+                    throw new Error('Failed to load officer data');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading officer data:', error);
+                if (loadingMessage) {
+                    loadingMessage.textContent = 'Error loading officer data. Please try again.';
+                }
+            });
         }
 
         // Check authentication on page load
