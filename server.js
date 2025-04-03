@@ -1,53 +1,50 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
-const dotenv = require('dotenv');
-const path = require('path');
-
-// Load environment variables
-dotenv.config();
+const config = require('./config');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
-// GitHub OAuth configuration
-const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
+// Authentication middleware
+const authenticateRequest = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
 
-// Serve static files
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+    const token = authHeader.split(' ')[1];
+    if (token !== config.API_KEY) {
+        return res.status(401).json({ error: 'Invalid token' });
+    }
 
-// Handle GitHub OAuth callback
-app.post('/auth/github/callback', async (req, res) => {
-    const { code } = req.body;
-    
+    next();
+};
+
+// Routes
+app.post('/api/checkin', authenticateRequest, async (req, res) => {
     try {
-        const response = await axios.post('https://github.com/login/oauth/access_token', {
-            client_id: GITHUB_CLIENT_ID,
-            client_secret: GITHUB_CLIENT_SECRET,
-            code: code,
-            redirect_uri: process.env.REDIRECT_URI
-        }, {
-            headers: {
-                Accept: 'application/json'
-            }
+        const { name, rank, branch, location, timestamp } = req.body;
+        
+        // Here you would typically save to your database
+        // For now, we'll just return success
+        res.json({ 
+            success: true, 
+            message: 'Check-in recorded successfully',
+            data: { name, rank, branch, location, timestamp }
         });
-
-        res.json(response.data);
     } catch (error) {
-        console.error('Token exchange failed:', error);
-        res.status(500).json({ error: 'Failed to exchange token' });
+        console.error('Error processing check-in:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 }); 
