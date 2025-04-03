@@ -143,7 +143,7 @@
             const code = urlParams.get('code');
             
             if (code) {
-                // Exchange code for token
+                // Exchange code for token directly with GitHub
                 fetch('https://github.com/login/oauth/access_token', {
                     method: 'POST',
                     headers: {
