@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMRI Officers Directory - Restricted Access</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>PMRI Officers Directory</h1>
+    </div>
+
+    <div class="content">
+        <div class="introduction">
+            <h2>Restricted Access</h2>
+            <p>
+                This page contains sensitive information about current PMRI officers. Access is restricted to authorized personnel only.
+            </p>
+        </div>
+
+        <div class="login-section">
+            <div class="login-container">
+                <h3>GitHub Authentication Required</h3>
+                <p class="auth-info">
+                    This page requires GitHub authentication. Please ensure you have the necessary permissions to access this content.
+                </p>
+                <div class="auth-button">
+                    <a href="https://github.com/login/oauth/authorize?client_id=YOUR_GITHUB_CLIENT_ID&redirect_uri=YOUR_REDIRECT_URI&scope=repo" class="github-auth-button">
+                        Login with GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="officersContent" class="officers-content" style="display: none;">
+            <h2>Current PMRI Officers</h2>
+            <div class="table-container">
+                <table class="officers-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Branch</th>
+                            <th>Research Focus</th>
+                            <th>Expected Graduation</th>
+                            <th>Contact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Table data will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="download-section">
+                <a href="documents/PMRI Army Students 3.31.25.xlsx" class="resource-link">Download Full Officer List (Excel)</a>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="orientation.html">Orientation Overview</a></li>
+                <li><a href="resources.html">Military & Academic Resources</a></li>
+                <li><a href="faq.html">Frequently Asked Questions</a></li>
+                <li><a href="contacts.html">Contacts & Points of Contact</a></li>
+                <li><a href="campus-life.html">Campus Life & Community</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is authenticated
+        function checkAuth() {
+            const token = localStorage.getItem('github_token');
+            if (token) {
+                // Verify token with GitHub API
+                fetch('https://api.github.com/user', {
+                    headers: {
+                        'Authorization': `token ${token}`
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Check if user has access to the repository
+                        return fetch('https://api.github.com/repos/alld0wnh1ll/alld0wnh1ll.github.io', {
+                            headers: {
+                                'Authorization': `token ${token}`
+                            }
+                        });
+                    }
+                    throw new Error('Not authenticated');
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('officersContent').style.display = 'block';
+                        document.querySelector('.login-section').style.display = 'none';
+                    } else {
+                        throw new Error('No repository access');
+                    }
+                })
+                .catch(error => {
+                    console.error('Authentication error:', error);
+                    localStorage.removeItem('github_token');
+                });
+            }
+        }
+
+        // Check authentication on page load
+        checkAuth();
+
+        // Handle GitHub OAuth callback
+        if (window.location.hash) {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const token = params.get('access_token');
+            
+            if (token) {
+                localStorage.setItem('github_token', token);
+                window.location.hash = '';
+                checkAuth();
+            }
+        }
+    </script>
+</body>
+</html> 
