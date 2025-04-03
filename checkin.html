@@ -12,28 +12,21 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     
-    <!-- Firebase Configuration -->
+    <!-- Load Firebase Configuration -->
+    <script src="js/firebase-config.js"></script>
+    
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCyCfi4JqEKhluLkMxNHu-HyCTV_Gdiyhg",
-            authDomain: "checkin-1b7f3.firebaseapp.com",
-            databaseURL: "https://checkin-1b7f3-default-rtdb.firebaseio.com",
-            projectId: "checkin-1b7f3",
-            storageBucket: "checkin-1b7f3.firebasestorage.app",
-            messagingSenderId: "838850473833",
-            appId: "1:838850473833:web:f0759a1a4fc395066e97f8",
-            measurementId: "G-Q87BPZR13Z"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        window.checkInsRef = database.ref('checkIns');
+        // Initialize Firebase when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFirebase();
+        });
 
         // Set up real-time listeners
         function setupRealtimeListeners() {
-            if (!window.checkInsRef) return;
+            if (!window.checkInsRef) {
+                console.log("No database reference available - user might not be authenticated");
+                return;
+            }
             
             window.checkInsRef.orderByChild('created')
                 .limitToLast(50)
@@ -82,11 +75,6 @@
                 historyList.appendChild(checkinElement);
             });
         }
-
-        // Initialize listeners when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            setupRealtimeListeners();
-        });
     </script>
 </head>
 <body>
