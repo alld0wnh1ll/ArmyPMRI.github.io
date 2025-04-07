@@ -136,22 +136,18 @@
 
         // Handle file download
         function handleDownload(event) {
-            event.preventDefault();
-            const token = localStorage.getItem('github_token');
-            if (!token) {
-                alert('Please authenticate first');
-                return false;
-            }
-
-            // Create a temporary link to download the file
-            const link = document.createElement('a');
-            link.href = 'documents/PMRI Army Students 3.31.25.xlsx';
-            link.download = 'PMRI_Army_Students.xlsx';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        event.preventDefault();
+        const token = localStorage.getItem('github_token');
+        if (!token) {
+            alert('Please authenticate first');
             return false;
         }
+
+        // Redirect to Google Sheets link instead of downloading a file
+        window.open('https://docs.google.com/spreadsheets/d/1lip7qBOXfZPoiOQKz41I-QSF1wMFEh24/edit?usp=drive_link&ouid=112768651851222964725&rtpof=true&sd=true', '_blank');
+        return false;
+        }
+
 
         // Load and parse Excel data
         function loadOfficerData() {
