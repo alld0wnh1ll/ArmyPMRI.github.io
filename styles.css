@@ -1314,3 +1314,17 @@ sidebar a,
 .step-list li {
     color: white;
 }
+.step-list li {
+    color: #ffffff;
+    background-color: #3b3b3b;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+.step-list li a {
+    color: #f0c808;
+}
+.step-list li a:hover {
+    color: #ffffff;
+}
+
